@@ -21,8 +21,8 @@ public class CustomerTest {
         Customer customer = new Customer("Jane", Collections.emptyList());
         String statement = customer.statement();
 
-        assertTrue(statement.contains("Amount owed is 0.0"));
-        assertTrue(statement.contains("You earned 0 frequent renter points"));
+        assertTrue(statement.contains("**Amount owed:** 0.0"));
+        assertTrue(statement.contains("**Frequent renter points:** 0"));
     }
 
     @Test
@@ -31,37 +31,34 @@ public class CustomerTest {
         Rental rental = new Rental(movie, 2);
         Customer customer = new Customer("John", List.of(rental));
 
-        assertTrue(customer.statement().contains("Amount owed is 2.0"));
+        assertTrue(customer.statement().contains("**Amount owed:** 2.0"));
     }
 
     @Test
     public void testRegularMovieExtraDays() {
-        // Regular: $2 + (4-2) * $1.5 = $5.0
         Movie movie = new Movie("Rambo", REGULAR);
         Rental rental = new Rental(movie, 4);
         Customer customer = new Customer("John", List.of(rental));
 
-        assertTrue(customer.statement().contains("Amount owed is 5.0"));
+        assertTrue(customer.statement().contains("**Amount owed:** 5.0"));
     }
 
     @Test
     public void testNewReleaseMoviePricing() {
-        // New Release: 3 * $3 = $9
         Movie movie = new Movie("Avatar 2", NEW_RELEASE);
         Rental rental = new Rental(movie, 3);
         Customer customer = new Customer("John", List.of(rental));
 
-        assertTrue(customer.statement().contains("Amount owed is 9.0"));
+        assertTrue(customer.statement().contains("**Amount owed:** 9.0"));
     }
 
     @Test
     public void testChildrensMovieBasePricing() {
-        // Children's: $1.5 base for 3 days
         Movie movie = new Movie("Nemo", CHILDRENS);
         Rental rental = new Rental(movie, 3);
         Customer customer = new Customer("John", List.of(rental));
 
-        assertTrue(customer.statement().contains("Amount owed is 1.5"));
+        assertTrue(customer.statement().contains("**Amount owed:** 1.5"));
     }
 
     @Test
@@ -70,7 +67,7 @@ public class CustomerTest {
         Rental rental = new Rental(movie, 5);
         Customer customer = new Customer("John", List.of(rental));
 
-        assertTrue(customer.statement().contains("Amount owed is 4.5"));
+        assertTrue(customer.statement().contains("**Amount owed:** 4.5"));
     }
 
     @Test
@@ -82,25 +79,23 @@ public class CustomerTest {
                 new Rental(m2, 2)
         ));
 
-        assertTrue(customer.statement().contains("Amount owed is 9.5"));
+        assertTrue(customer.statement().contains("**Amount owed:** 9.5"));
     }
 
     @Test
     public void testFrequentRenterPointsBasic() {
-        // Regular movie: 1 point
         Movie movie = new Movie("Test", REGULAR);
         Customer customer = new Customer("John", List.of(new Rental(movie, 5)));
 
-        assertTrue(customer.statement().contains("You earned 1 frequent renter points"));
+        assertTrue(customer.statement().contains("**Frequent renter points:** 1"));
     }
 
     @Test
     public void testFrequentRenterPointsBonusForNewRelease() {
-        // New Release > 1 day: 2 points (1 base + 1 bonus)
         Movie movie = new Movie("Test", NEW_RELEASE);
         Customer customer = new Customer("John", List.of(new Rental(movie, 2)));
 
-        assertTrue(customer.statement().contains("You earned 2 frequent renter points"));
+        assertTrue(customer.statement().contains("**Frequent renter points:** 2"));
     }
 
     @Test
@@ -108,6 +103,36 @@ public class CustomerTest {
         Movie movie = new Movie("Test", NEW_RELEASE);
         Customer customer = new Customer("John", List.of(new Rental(movie, 1)));
 
-        assertTrue(customer.statement().contains("You earned 1 frequent renter points"));
+        assertTrue(customer.statement().contains("**Frequent renter points:** 1"));
+    }
+
+    @Test
+    public void testComedyMovieBasePricing() {
+        Movie movie = new Movie("Hangover", COMEDY);
+        Rental rental = new Rental(movie, 2);
+        Customer customer = new Customer("John", List.of(rental));
+
+        assertTrue(customer.statement().contains("**Amount owed:** 2.5"));
+    }
+
+    @Test
+    public void testDramaMovieExtraDays() {
+        Movie movie = new Movie("Titanic", DRAMA);
+        Rental rental = new Rental(movie, 3);
+        Customer customer = new Customer("John", List.of(rental));
+
+        assertTrue(customer.statement().contains("**Amount owed:** 7.0"));
+    }
+
+    @Test
+    public void testMarkdownTableFormat() {
+        Movie movie = new Movie("Test", REGULAR);
+        Customer customer = new Customer("John", List.of(new Rental(movie, 1)));
+        String statement = customer.statement();
+
+        assertTrue(statement.contains("## Rental Record for John"));
+        assertTrue(statement.contains("| Movie | Amount |"));
+        assertTrue(statement.contains("|-------|-------:|"));
+        assertTrue(statement.contains("| Test | 2.0 |"));
     }
 }

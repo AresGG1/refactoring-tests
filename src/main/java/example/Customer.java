@@ -14,6 +14,14 @@ public class Customer {
     private static final double CHILDRENS_EXTRA_DAY_RATE = 1.5;
     private static final int CHILDRENS_FREE_DAYS = 3;
 
+    private static final double COMEDY_BASE_PRICE = 2.5;
+    private static final double COMEDY_EXTRA_DAY_RATE = 1.0;
+    private static final int COMEDY_FREE_DAYS = 2;
+
+    private static final double DRAMA_BASE_PRICE = 3.0;
+    private static final double DRAMA_EXTRA_DAY_RATE = 2.0;
+    private static final int DRAMA_FREE_DAYS = 1;
+
     private final String name;
     private final List<Rental> rentals;
 
@@ -28,16 +36,18 @@ public class Customer {
 
     public String statement() {
         StringBuilder result = new StringBuilder();
-        result.append("Rental Record for ").append(getName()).append("\n");
+        result.append("## Rental Record for ").append(getName()).append("\n\n");
+        result.append("| Movie | Amount |\n");
+        result.append("|-------|-------:|\n");
 
         for (Rental each : rentals) {
             double thisAmount = calculateRentalAmount(each);
-            result.append("\t").append(each.getMovie().getTitle())
-                  .append("\t").append(thisAmount).append("\n");
+            result.append("| ").append(each.getMovie().getTitle())
+                  .append(" | ").append(thisAmount).append(" |\n");
         }
 
-        result.append("Amount owed is ").append(calculateTotalAmount()).append("\n");
-        result.append("You earned ").append(calculateFrequentRenterPoints()).append(" frequent renter points");
+        result.append("\n**Amount owed:** ").append(calculateTotalAmount()).append("\n\n");
+        result.append("**Frequent renter points:** ").append(calculateFrequentRenterPoints());
 
         return result.toString();
     }
@@ -56,6 +66,18 @@ public class Customer {
                 amount += CHILDRENS_BASE_PRICE;
                 if (rental.getDaysRented() > CHILDRENS_FREE_DAYS) {
                     amount += (rental.getDaysRented() - CHILDRENS_FREE_DAYS) * CHILDRENS_EXTRA_DAY_RATE;
+                }
+            }
+            case COMEDY -> {
+                amount += COMEDY_BASE_PRICE;
+                if (rental.getDaysRented() > COMEDY_FREE_DAYS) {
+                    amount += (rental.getDaysRented() - COMEDY_FREE_DAYS) * COMEDY_EXTRA_DAY_RATE;
+                }
+            }
+            case DRAMA -> {
+                amount += DRAMA_BASE_PRICE;
+                if (rental.getDaysRented() > DRAMA_FREE_DAYS) {
+                    amount += (rental.getDaysRented() - DRAMA_FREE_DAYS) * DRAMA_EXTRA_DAY_RATE;
                 }
             }
         }
