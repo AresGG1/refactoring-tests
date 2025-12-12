@@ -2,7 +2,7 @@ package example;
 
 import org.junit.Test;
 
-import static example.Movie.MovieType.*;
+import static example.MovieType.*;
 import static org.junit.Assert.*;
 
 public class RentalTest {

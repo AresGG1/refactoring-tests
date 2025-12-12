@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.List;
 
-import static example.Movie.MovieType.*;
+import static example.MovieType.*;
 import static org.junit.Assert.*;
 
 public class CustomerTest {

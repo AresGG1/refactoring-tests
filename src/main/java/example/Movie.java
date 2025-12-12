@@ -3,9 +3,6 @@ package example;
 public class Movie {
     private final String title;
     private final MovieType priceCode;
-    public enum MovieType {
-        REGULAR, NEW_RELEASE, CHILDRENS
-    }
 
     public Movie(String title, MovieType priceCode) {
         this.title = title;
@@ -16,7 +13,7 @@ public class Movie {
         return priceCode;
     }
 
-    public String getTitle (){
+    public String getTitle() {
         return title;
     }
 
