@@ -1,4 +1,4 @@
-package example;
+package com.example.movierental.model;
 
 public enum MovieType {
     REGULAR,
